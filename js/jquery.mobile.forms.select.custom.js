@@ -15,6 +15,7 @@
 			screen = $( "<div>", {"class": "ui-selectmenu-screen ui-screen-hidden"} ).appendTo( thisPage ),
 			selectOptions = widget._selectOptions(),
 			isMultiple = widget.isMultiple = widget.select[ 0 ].multiple,
+			isStandalonePopup = widget.select.attr('data-standalone-popup')=='true',
 			buttonId = selectID + "-button",
 			menuId = selectID + "-menu",
 			menuPage = $( "<div data-" + $.mobile.ns + "role='dialog' data-" +$.mobile.ns + "theme='"+ widget.options.menuPageTheme +"'>" +
@@ -63,6 +64,7 @@
 			screen: screen,
 			selectOptions: selectOptions,
 			isMultiple: isMultiple,
+			isStandalonePopup: isStandalonePopup,
 			theme: widget.options.theme,
 			listbox: listbox,
 			list: list,
@@ -79,22 +81,26 @@
 				// Create list from select, update state
 				self.refresh();
 
-				self.select.attr( "tabindex", "-1" ).focus(function() {
-					$( this ).blur();
-					self.button.focus();
-				});
+				if (self.isStandalonePopup) {
+					self.button.hide();
+				} else {
+					self.select.attr( "tabindex", "-1" ).focus(function() {
+						$( this ).blur();
+						self.button.focus();
+					});
 
-				// Button events
-				self.button.bind( "vclick keydown" , function( event ) {
-					if ( event.type == "vclick" ||
-							 event.keyCode && ( event.keyCode === $.mobile.keyCode.ENTER ||
-																	event.keyCode === $.mobile.keyCode.SPACE ) ) {
+					// Button events
+					self.button.bind( "vclick keydown" , function( event ) {
+						if ( event.type == "vclick" ||
+								 event.keyCode && ( event.keyCode === $.mobile.keyCode.ENTER ||
+																		event.keyCode === $.mobile.keyCode.SPACE ) ) {
 
-						self.open();
-						event.preventDefault();
-					}
-				});
-
+							self.open();
+							event.preventDefault();
+						}
+					});
+				}
+				
 				// Events for list items
 				self.list.attr( "role", "listbox" )
 					.delegate( ".ui-li>a", "focusin", function() {
@@ -297,13 +303,15 @@
 					screenHeight = window.innerHeight,
 					screenWidth = window.innerWidth;
 
-				//add active class to button
-				self.button.addClass( $.mobile.activeBtnClass );
+				if (!self.isStandalonePopup) {
+					//add active class to button
+					self.button.addClass( $.mobile.activeBtnClass );
 
-				//remove after delay
-				setTimeout( function() {
-					self.button.removeClass( $.mobile.activeBtnClass );
-				}, 300);
+					//remove after delay
+					setTimeout( function() {
+						self.button.removeClass( $.mobile.activeBtnClass );
+					}, 300);
+				}
 
 				function focusMenuItem() {
 					self.list.find( $.mobile.activeBtnClass ).focus();
@@ -346,33 +354,38 @@
 					self.screen.height( $(document).height() )
 						.removeClass( "ui-screen-hidden" );
 
-					// Try and center the overlay over the button
-					var roomtop = btnOffset - scrollTop,
-						roombot = scrollTop + screenHeight - btnOffset,
-						halfheight = menuHeight / 2,
-						maxwidth = parseFloat( self.list.parent().css( "max-width" ) ),
-						newtop, newleft;
-
-					if ( roomtop > menuHeight / 2 && roombot > menuHeight / 2 ) {
-						newtop = btnOffset + ( self.button.outerHeight() / 2 ) - halfheight;
-					} else {
-						// 30px tolerance off the edges
-						newtop = roomtop > roombot ? scrollTop + screenHeight - menuHeight - 30 : scrollTop + 30;
-					}
-
-					// If the menuwidth is smaller than the screen center is
-					if ( menuWidth < maxwidth ) {
+					var newtop, newleft;
+					if (self.isStandalonePopup) {
 						newleft = ( screenWidth - menuWidth ) / 2;
+						newheight = ( screenHeight - menuHeight ) / 2;
 					} else {
+						// Try and center the overlay over the button
+						var roomtop = btnOffset - scrollTop,
+							roombot = scrollTop + screenHeight - btnOffset,
+							halfheight = menuHeight / 2,
+							maxwidth = parseFloat( self.list.parent().css( "max-width" ) );
 
-						//otherwise insure a >= 30px offset from the left
-						newleft = self.button.offset().left + self.button.outerWidth() / 2 - menuWidth / 2;
+						if ( roomtop > menuHeight / 2 && roombot > menuHeight / 2 ) {
+							newtop = btnOffset + ( self.button.outerHeight() / 2 ) - halfheight;
+						} else {
+							// 30px tolerance off the edges
+							newtop = roomtop > roombot ? scrollTop + screenHeight - menuHeight - 30 : scrollTop + 30;
+						}
 
-						// 30px tolerance off the edges
-						if ( newleft < 30 ) {
-							newleft = 30;
-						} else if ( (newleft + menuWidth) > screenWidth ) {
-							newleft = screenWidth - menuWidth - 30;
+						// If the menuwidth is smaller than the screen center is
+						if ( menuWidth < maxwidth ) {
+							newleft = ( screenWidth - menuWidth ) / 2;
+						} else {
+
+							//otherwise insure a >= 30px offset from the left
+							newleft = self.button.offset().left + self.button.outerWidth() / 2 - menuWidth / 2;
+
+							// 30px tolerance off the edges
+							if ( newleft < 30 ) {
+								newleft = 30;
+							} else if ( (newleft + menuWidth) > screenWidth ) {
+								newleft = screenWidth - menuWidth - 30;
+							}
 						}
 					}
 
