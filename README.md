@@ -12,7 +12,7 @@ Last jQuery Mobile update / pull
 =================================
 In regular interval this Fork will be updated from the original jQuery Mobile repository.
 
-Last update: Sep 13, 2011
+Last update: Nov 15, 2011
 
 
 
