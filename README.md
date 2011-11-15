@@ -5,7 +5,6 @@ Main Modifies
 ==============
 * ListView - item creation hook: trigger itemApply event
 * stable fixed header/footer, no fade in/out effects
-* Selectmenu extension: data-standalone-popup
 * Selectmenu - change-event gets always triggered when a option was selected, not only if the value has been changed
 
 
