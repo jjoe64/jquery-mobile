@@ -1,8 +1,5 @@
 /*
-* jQuery Mobile Framework : custom "selectmenu" plugin
-* Copyright (c) jQuery Project
-* Dual licensed under the MIT or GPL Version 2 licenses.
-* http://jquery.org/license
+* custom "selectmenu" plugin
 */
 
 (function( $, undefined ) {
@@ -17,9 +14,9 @@
 			isMultiple = widget.isMultiple = widget.select[ 0 ].multiple,
 			buttonId = selectID + "-button",
 			menuId = selectID + "-menu",
-			menuPage = $( "<div data-" + $.mobile.ns + "role='dialog' data-" +$.mobile.ns + "theme='"+ widget.options.menuPageTheme +"'>" +
+			menuPage = $( "<div data-" + $.mobile.ns + "role='dialog' data-" +$.mobile.ns + "theme='"+ widget.options.theme +"' data-" +$.mobile.ns + "overlay-theme='"+ widget.options.overlayTheme +"'>" +
 				"<div data-" + $.mobile.ns + "role='header'>" +
-				"<div class='ui-title'>" + label.text() + "</div>"+
+				"<div class='ui-title'>" + label.getEncodedText() + "</div>"+
 				"</div>"+
 				"<div data-" + $.mobile.ns + "role='content'></div>"+
 				"</div>" ).appendTo( $.mobile.pageContainer ).page(),
@@ -186,6 +183,20 @@
 				self.menuPage.bind( "pagehide", function() {
 					self.list.appendTo( self.listbox );
 					self._focusButton();
+
+					// TODO centralize page removal binding / handling in the page plugin.
+					// Suggestion from @jblas to do refcounting
+					//
+					// TODO extremely confusing dependency on the open method where the pagehide.remove
+					// bindings are stripped to prevent the parent page from disappearing. The way
+					// we're keeping pages in the DOM right now sucks
+					//
+					// rebind the page remove that was unbound in the open function
+					// to allow for the parent page removal from actions other than the use
+					// of a dialog sized custom select
+					//
+					// doing this here provides for the back button on the custom select dialog
+					$.mobile._bindPageRemove.call( self.thisPage );
 				});
 
 				// Events on "screen" overlay
@@ -200,6 +211,10 @@
 						return false;
 					}
 				});
+
+				// track this dependency so that when the parent page
+				// is removed on pagehide it will also remove the menupage
+				self.thisPage.addDependents( this.menuPage );
 			},
 
 			_isRebuildRequired: function() {
@@ -257,18 +272,6 @@
 				var self = this;
 
 				if ( self.menuType == "page" ) {
-					// TODO centralize page removal binding / handling in the page plugin.
-					// Suggestion from @jblas to do refcounting
-					//
-					// rebind the page remove that was unbound in the open function
-					// to allow for the parent page removal from actions other than the use
-					// of a dialog sized custom select
-					if( !self.thisPage.data("page").options.domCache ){
-						self.thisPage.bind( "pagehide.remove", function() {
-							$(self).remove();
-						});
-					}
-
 					// doesn't solve the possible issue with calling change page
 					// where the objects don't define data urls which prevents dialog key
 					// stripping - changePage has incoming refactor
@@ -292,7 +295,10 @@
 				var self = this,
 					menuHeight = self.list.parent().outerHeight(),
 					menuWidth = self.list.parent().outerWidth(),
-					scrollTop = $( window ).scrollTop(),
+					activePage = $( ".ui-page-active" ),
+					tOverflow = $.support.touchOverflow && $.mobile.touchOverflowEnabled,
+					tScrollElem = activePage.is( ".ui-native-fixed" ) ? activePage.find( ".ui-content" ) : activePage;
+					scrollTop = tOverflow ? tScrollElem.scrollTop() : $( window ).scrollTop(),
 					btnOffset = self.button.offset().top,
 					screenHeight = window.innerHeight,
 					screenWidth = window.innerWidth;
@@ -337,6 +343,7 @@
 
 					self.menuType = "page";
 					self.menuPageContent.append( self.list );
+					self.menuPage.find("div .ui-title").text(self.label.text());
 					$.mobile.changePage( self.menuPage, {
 						transition: $.mobile.defaultDialogTransition
 					});
@@ -405,7 +412,7 @@
 				self.select.find( "option" ).each( function( i ) {
 					var $this = $( this ),
 						$parent = $this.parent(),
-						text = $this.text(),
+						text = $this.getEncodedText(),
 						anchor = "<a href='#'>"+ text +"</a>",
 						classes = [],
 						extraAttrs = [];

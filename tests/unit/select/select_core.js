@@ -6,6 +6,7 @@
 	var libName = "jquery.mobile.forms.select.js",
 		originalDefaultDialogTrans = $.mobile.defaultDialogTransition,
 		originalDefTransitionHandler = $.mobile.defaultTransitionHandler,
+		originalGetEncodedText = $.fn.getEncodedText,
 		resetHash, closeDialog;
 
 	resetHash = function(timeout){
@@ -20,6 +21,9 @@
 		teardown: function(){
 			$.mobile.defaultDialogTransition = originalDefaultDialogTrans;
 			$.mobile.defaultTransitionHandler = originalDefTransitionHandler;
+
+			$.fn.getEncodedText = originalGetEncodedText;
+			window.encodedValueIsDefined = undefined;
 		}
 	});
 
@@ -312,5 +316,69 @@
 		ok( select
 			.siblings( "a" )
 			.hasClass("ui-btn-up-" + select.parents(":jqmData(role='page')").jqmData('theme')));
+	});
+
+	// issue #2547
+	test( "custom select list item links have encoded option text values", function() {
+		$( "#encoded-option" ).data( 'selectmenu' )._buildList();
+		same(window.encodedValueIsDefined, undefined);
+	});
+
+	// issue #2547
+	test( "custom select list item links have unencoded option text values when using vanilla $.fn.text", function() {
+		// undo our changes, undone in teardown
+		$.fn.getEncodedText = $.fn.text;
+
+		$( "#encoded-option" ).data( 'selectmenu' )._buildList();
+
+		same(window.encodedValueIsDefined, true);
+	});
+
+	$.mobile.page.prototype.options.keepNative = "select.should-be-native";
+
+	// not testing the positive case here since's it's obviously tested elsewhere
+	test( "select elements in the keepNative set shouldn't be enhanced", function() {
+		ok( !$("#keep-native").parent().is("div.ui-btn") );
+	});
+
+	asyncTest( "dialog size select title should match the label", function() {
+		var $select = $( "#select-choice-many-1" ),
+			$label = $select.parent().siblings( "label" ),
+			$button = $select.siblings( "a" );
+
+		$.testHelper.pageSequence([
+			function() {
+				$button.click();
+			},
+
+			function() {
+				same($.mobile.activePage.find( ".ui-title" ).text(), $label.text());
+				window.history.back();
+			},
+
+			start
+		]);
+	});
+
+	asyncTest( "dialog size select title should match the label when changed after the dialog markup is added to the DOM", function() {
+		var $select = $( "#select-choice-many-1" ),
+			$label = $select.parent().siblings( "label" ),
+			$button = $select.siblings( "a" );
+
+		$label.text( "foo" );
+
+		$.testHelper.pageSequence([
+			function() {
+				$label.text( "foo" );
+				$button.click();
+			},
+
+			function() {
+				same($.mobile.activePage.find( ".ui-title" ).text(), $label.text());
+				window.history.back();
+			},
+
+			start
+		]);
 	});
 })(jQuery);

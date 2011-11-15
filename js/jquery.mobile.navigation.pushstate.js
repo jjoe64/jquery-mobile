@@ -1,9 +1,7 @@
 /*
-* jQuery Mobile Framework : history.pushState support, layered on top of hashchange
-* Copyright (c) jQuery Project
-* Dual licensed under the MIT or GPL Version 2 licenses.
-* http://jquery.org/license
+* history.pushState support, layered on top of hashchange
 */
+
 ( function( $, window ) {
 	// For now, let's Monkeypatch this onto the end of $.mobile._registerInternalEvents
 	// Scope self to pushStateHandler so we can reference it sanely within the
@@ -48,22 +46,32 @@
 			return url;
 		},
 
+		// TODO sort out a single barrier to hashchange functionality
+		nextHashChangePrevented: function( value ) {
+			$.mobile.urlHistory.ignoreNextHashChange = value;
+			self.onHashChangeDisabled = value;
+		},
+
 		// on hash change we want to clean up the url
 		// NOTE this takes place *after* the vanilla navigation hash change
 		// handling has taken place and set the state of the DOM
 		onHashChange: function( e ) {
+			// disable this hash change
+			if( self.onHashChangeDisabled ){
+				return;
+			}
+			
 			var href, state,
 				hash = location.hash,
-				isPath = $.mobile.path.isPath( hash );
+				isPath = $.mobile.path.isPath( hash ),
+				resolutionUrl = isPath ? location.href : $.mobile.getDocumentUrl();
 			hash = isPath ? hash.replace( "#", "" ) : hash;
-
-			self.hashchangeFired = true;
 
 			// propulate the hash when its not available
 			state = self.state();
 
 			// make the hash abolute with the current href
-			href = $.mobile.path.makeUrlAbsolute( hash, location.href );
+			href = $.mobile.path.makeUrlAbsolute( hash, resolutionUrl );
 
 			if ( isPath ) {
 				href = self.resetUIKeys( href );
@@ -91,14 +99,14 @@
 			// or forward popstate
 			if( poppedState ) {
 				// disable any hashchange triggered by the browser
-				$.mobile.urlHistory.ignoreNextHashChange = true;
+				self.nextHashChangePrevented( true );
 
 				// defer our manual hashchange until after the browser fired
 				// version has come and gone
 				setTimeout(function() {
 					// make sure that the manual hash handling takes place
-					$.mobile.urlHistory.ignoreNextHashChange = false;
-					
+					self.nextHashChangePrevented( false );
+
 					// change the page based on the hash
 					$.mobile._handleHashChange( poppedState.hash );
 				}, 100);

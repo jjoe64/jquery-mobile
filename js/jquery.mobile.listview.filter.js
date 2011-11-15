@@ -1,8 +1,5 @@
 /*
-* jQuery Mobile Framework : "listview" filter extension
-* Copyright (c) jQuery Project
-* Dual licensed under the MIT or GPL Version 2 licenses.
-* http://jquery.org/license
+* "listview" filter extension
 */
 
 (function( $, undefined ) {
@@ -44,12 +41,11 @@ $( ":jqmData(role='listview')" ).live( "listviewcreate", function() {
 
 			// Change val as lastval for next execution
 			$this.jqmData( "lastval" , val );
-
-			change = val.replace( new RegExp( "^" + lastval ) , "" );
+			change = val.substr( 0 , lastval.length - 1 ).replace( lastval , "" );
 
 			if ( val.length < lastval.length || change.length != ( val.length - lastval.length ) ) {
 
-				// Removed chars or pasted something totaly different, check all items
+				// Removed chars or pasted something totally different, check all items
 				listItems = list.children();
 			} else {
 
@@ -79,7 +75,7 @@ $( ":jqmData(role='listview')" ).live( "listviewcreate", function() {
 						item.toggleClass( "ui-filter-hidequeue" , true );
 					} else {
 
-						// There"s a shown item in the bucket
+						// There's a shown item in the bucket
 						childItems = true;
 					}
 				}

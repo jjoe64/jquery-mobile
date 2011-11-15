@@ -1,6 +1,7 @@
 <?php
-$type = "text/javascript";
-$elements = array(
+$type = 'text/javascript';
+$files = array(
+	'../LICENSE-INFO.txt',
 	'jquery.ui.widget.js',
 	'jquery.mobile.widget.js',
 	'jquery.mobile.media.js',
@@ -33,8 +34,7 @@ $elements = array(
 	'jquery.mobile.controlGroup.js',
 	'jquery.mobile.links.js',
 	'jquery.mobile.fixHeaderFooter.js',
-	'jquery.mobile.media.classes.js',
 	'jquery.mobile.init.js'
 );
 
-include('../combine.php');
+require_once('../combine.php');
