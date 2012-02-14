@@ -1,15 +1,14 @@
 <!DOCTYPE html> 
-<html> 
+<html class="ui-mobile-rendering"> 
 	<head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	<title>jQuery Mobile Docs - Data Attribute Reference</title> 
-	<link rel="stylesheet"  href="../../css/themes/default/" /> 
+	<link rel="stylesheet"  href="../../css/themes/default/jquery.mobile.css" /> 
 	<link rel="stylesheet" href="../_assets/css/jqm-docs.css"/>
+
+	<script data-main="../../js/jquery.mobile.docs" src="../../external/requirejs/require.js"></script>
 	<script src="../../js/jquery.js"></script>
-	<script src="../../experiments/themeswitcher/jquery.mobile.themeswitcher.js"></script>
-	<script src="../_assets/js/jqm-docs.js"></script>
-	<script src="../../js/"></script>
 </head> 
 <body> 
 
@@ -17,7 +16,8 @@
 
 	<div data-role="header" data-theme="f">
 		<h1>Data Attributes</h1>
-		<a href="../../" data-icon="home" data-iconpos="notext" data-direction="reverse" class="ui-btn-right jqm-home">Home</a>
+		<a href="../../" data-icon="home" data-iconpos="notext" data-direction="reverse">Home</a>
+		<a href="../nav.html" data-icon="search" data-iconpos="notext" data-rel="dialog" data-transition="fade">Search</a>
 	</div><!-- /header -->
 
 	<div data-role="content" data-theme="c">
@@ -56,6 +56,10 @@
 					<td>true | <strong>false</strong></td>
 				</tr>
 				<tr>
+					<th>data-mini</th>
+					<td>true | <strong>false</strong> - Compact sized version</td>
+				</tr>
+				<tr>
 					<th>data-shadow</th>
 					<td><strong>true</strong> | false</td>
 				</tr>
@@ -70,6 +74,10 @@
 			<h2><a href="../forms/checkboxes/">Checkbox</a></h2>
 			<p>Pairs of labels and inputs with <code>type="checkbox"</code> are auto-enhanced, no <code>data-role</code> required</p>
 			<table>
+				<tr>
+					<th>data-mini</th>
+					<td>true | <strong>false</strong> - Compact sized version</td>
+				</tr>
 				<tr>
 					<th>data-role</th>
 					<td>none (prevents auto-enhancement to use native control)</td>
@@ -92,6 +100,10 @@
 					<td>swatch letter (a-z)</td>
 				</tr>
 				<tr>
+					<th>data-mini</th>
+					<td>true | <strong>false</strong> - Compact sized version</td>
+				</tr>
+				<tr>
 					<th>data-theme</th>
 					<td>swatch letter (a-z)</td>
 				</tr>
@@ -105,13 +117,17 @@
 					<td>swatch letter (a-z) - Sets all collapsibles in set</td>
 				</tr>
 				<tr>
+					<th>data-mini</th>
+					<td>true | <strong>false</strong> - Compact sized version</td>
+				</tr>
+				<tr>
 					<th>data-theme</th>
 					<td>swatch letter (a-z) - Sets all collapsibles in set</td>
 				</tr>
 			</table>
 			
 			<h2><a href="../pages/page-dialogs.html">Dialog</a></h2>
-			<p>Container with <code>data-role="page"</code> or <code>"dialog"</code> linked to with <code>data-rel="dialog"</code> on the anchor.</p>
+			<p>Page with <code>data-role="page"</code> linked to with <code>data-rel="dialog"</code> on the anchor.</p>
 			<table>
 				<tr>
 					<th>data-close-btn-text</th>
@@ -120,10 +136,6 @@
 				<tr>
 					<th>data-dom-cache</th>
 					<td>true | <strong>false</strong></td>
-				</tr>
-				<tr>
-					<th>data-id</th>
-					<td>string (unique id for the page)</td>
 				</tr>
 				<tr>
 					<th>data-fullscreen</th>
@@ -160,6 +172,10 @@
 			<p>Select with <code>data-role="slider"</code>, two options only</p>
 			<table>
 				<tr>
+					<th>data-mini</th>
+					<td>true | <strong>false</strong> - Compact sized version</td>
+				</tr>
+				<tr>
 					<th>data-role</th>
 					<td>none (prevents auto-enhancement to use native control)</td>
 				</tr>
@@ -194,28 +210,12 @@
 			<p>Container with <code>data-role="header"</code></p>
 			<table>
 				<tr>
-					<th>data-add-back-btn</th>
-					<td>true | <strong>false</strong> (auto add back button, header only)</td>
-				</tr>
-				<tr>
-					<th>data-back-btn-text</th>
-					<td>string</td>
-				</tr>
-				<tr>
-					<th>data-back-btn-theme</th>
-					<td>swatch letter (a-z)</td>
-				</tr>
-				<tr>
 					<th>data-position</th>
 					<td>fixed</td>
 				</tr>
 				<tr>
 					<th>data-theme</th>
 					<td>swatch letter (a-z)</td>
-				</tr>
-				<tr>
-					<th>data-title</th>
-					<td>string (title used when page is shown)</td>
 				</tr>
 			</table>
 
@@ -282,6 +282,10 @@
 					<td>home | delete | plus | arrow-u | arrow-d | check | gear | grid | star | custom | arrow-r | arrow-l | minus | refresh | forward | back | alert | info | search</td>
 				</tr>
 				<tr>
+					<th>data-split-theme</th>
+					<td>swatch letter (a-z)<td>
+				</tr>
+				<tr>
 					<th>data-theme</th>
 					<td>swatch letter (a-z)</td>
 				</tr>
@@ -290,6 +294,10 @@
 			<h2><a href="../lists/docs-lists.html">Listview item</a></h2>
 			<p>LI within a listview</p>
 			<table>
+				<tr>
+					<th>data-filtertext</th>
+					<td>string (filter by this value instead of inner text)</td>
+				</tr>
 				<tr>
 					<th>data-icon</th>
 					<td>home | delete | plus | arrow-u | arrow-d | check | gear | grid | star | custom | arrow-r | arrow-l | minus | refresh | forward | back | alert | info | search</td>
@@ -303,10 +311,37 @@
 					<td>swatch letter (a-z) - can also be set on individual LIs</td>
 				</tr>
 			</table>
-
+			<h2><a href="../toolbars/docs-navbar.html">Navbar</a></h2>
+			<p>A number of LIs wrapped in a container with <code>data-role="navbar"</code></p>
+			<table>
+				<tr>
+					<th>data-icon</th>
+					<td>home | delete | plus | arrow-u | arrow-d | check | gear | grid | star | custom | arrow-r | arrow-l | minus | refresh | forward | back | alert | info | search</td>
+				</tr>
+				<tr>
+					<th>data-iconpos</th>
+					<td><strong>left</strong> | right | top | bottom |  notext</td>
+				</tr>
+				<tr>
+					<th>data-theme</th>
+					<td>swatch letter (a-z) - can also be set on individual LIs</td>
+				</tr>
+			</table>
 			<h2><a href="../pages/page-anatomy.html">Page</a></h2>
 			<p>Container with <code>data-role="page"</code></p>
 			<table>
+				<tr>
+					<th>data-add-back-btn</th>
+					<td>true | <strong>false</strong> (auto add back button, header only)</td>
+				</tr>
+				<tr>
+					<th>data-back-btn-text</th>
+					<td>string</td>
+				</tr>
+				<tr>
+					<th>data-back-btn-theme</th>
+					<td>swatch letter (a-z)</td>
+				</tr>
 				<tr>
 					<th>data-close-btn-text</th>
 					<td>string (text for the close button, dialog only)</td>
@@ -314,10 +349,6 @@
 				<tr>
 					<th>data-dom-cache</th>
 					<td>true | <strong>false</strong></td>
-				</tr>
-				<tr>
-					<th>data-id</th>
-					<td>string (unique id for the page)</td>
 				</tr>
 				<tr>
 					<th>data-fullscreen</th>
@@ -340,6 +371,10 @@
 			<h2><a href="../forms/radiobuttons/">Radio button</a></h2>
 			<p>Pairs of labels and inputs with <code>type="radio"</code> are auto-enhanced, no <code>data-role</code> required</p>
 			<table>
+				<tr>
+					<th>data-mini</th>
+					<td>true | <strong>false</strong> - Compact sized version</td>
+				</tr>
 				<tr>
 					<th>data-role</th>
 					<td>none (prevents auto-enhancement to use native control)</td>
@@ -364,6 +399,10 @@
 				<tr>
 					<th>data-inline</th>
 					<td>true | <strong>false</strong></td>
+				</tr>
+				<tr>
+					<th>data-mini</th>
+					<td>true | <strong>false</strong> - Compact sized version</td>
 				</tr>
 				<tr>
 					<th>data-native-menu</th>
@@ -392,6 +431,14 @@
 			<p>Inputs with <code>type="range"</code> are auto-enhanced, no <code>data-role</code> required</p>
 			<table>
 				<tr>
+					<th>data-highlight</th>
+					<td>true | <strong>false</strong> - Adds an active state fill on track to handle</td>
+				</tr>
+				<tr>
+					<th>data-mini</th>
+					<td>true | <strong>false</strong> - Compact sized version</td>
+				</tr>
+				<tr>
 					<th>data-role</th>
 					<td>none (prevents auto-enhancement to use native control)</td>
 				</tr>
@@ -408,6 +455,10 @@
 			<h2><a href="../forms/textinputs/">Text input &amp; Textarea</a></h2>
 			<p>Input <code>type="text|number|search|etc."</code> or <code>textarea</code> elements are auto-enhanced, no <code>data-role</code> required</p>
 			<table>
+				<tr>
+					<th>data-mini</th>
+					<td>true | <strong>false</strong> - Compact sized version</td>
+				</tr>
 				<tr>
 					<th>data-role</th>
 					<td>none (prevents auto-enhancement to use native control)</td>

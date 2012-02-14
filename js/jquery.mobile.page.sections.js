@@ -1,7 +1,9 @@
-/*
-* This plugin handles theming and layout of headers, footers, and content areas
-*/
+//>>excludeStart("jqmBuildExclude", pragmas.jqmBuildExclude);
+//>>description: Theming and layout of headers, footers, and content areas
+//>>label: Page Sections
 
+define( [ "jquery", "./jquery.mobile.page", "./jquery.mobile.core", "./jquery.mobile.buttonMarkup" ], function( $ ) {
+//>>excludeEnd("jqmBuildExclude");
 (function( $, undefined ) {
 
 $.mobile.page.prototype.options.backBtnText  = "Back";
@@ -11,7 +13,7 @@ $.mobile.page.prototype.options.headerTheme  = "a";
 $.mobile.page.prototype.options.footerTheme  = "a";
 $.mobile.page.prototype.options.contentTheme = null;
 
-$( ":jqmData(role='page'), :jqmData(role='dialog')" ).live( "pagecreate", function( e ) {
+$( document ).delegate( ":jqmData(role='page'), :jqmData(role='dialog')", "pagecreate", function( e ) {
 	
 	var $page = $( this ),
 		o = $page.data( "page" ).options,
@@ -22,7 +24,7 @@ $( ":jqmData(role='page'), :jqmData(role='dialog')" ).live( "pagecreate", functi
 		var $this = $( this ),
 			role = $this.jqmData( "role" ),
 			theme = $this.jqmData( "theme" ),
-			contentTheme = theme || o.contentTheme || pageTheme,
+			contentTheme = theme || o.contentTheme || ( pageRole === "dialog" && pageTheme ),
 			$headeranchors,
 			leftbtn,
 			rightbtn,
@@ -74,7 +76,7 @@ $( ":jqmData(role='page'), :jqmData(role='dialog')" ).live( "pagecreate", functi
 				});
 
 		} else if ( role === "content" ) {
-			if ( contentTheme && pageRole === "dialog" ) {
+			if ( contentTheme ) {
 			    $this.addClass( "ui-body-" + ( contentTheme ) );
 			}
 
@@ -85,3 +87,6 @@ $( ":jqmData(role='page'), :jqmData(role='dialog')" ).live( "pagecreate", functi
 });
 
 })( jQuery );
+//>>excludeStart("jqmBuildExclude", pragmas.jqmBuildExclude);
+});
+//>>excludeEnd("jqmBuildExclude");

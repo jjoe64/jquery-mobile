@@ -1,7 +1,10 @@
-/*
-* "button" plugin - links that proxy to native input/buttons
-*/
+//>>excludeStart("jqmBuildExclude", pragmas.jqmBuildExclude);
+//>>description: Form Buttons
+//>>label: links that proxy to native input/buttons
+//>>group: forms
 
+define( [ "jquery", "./jquery.mobile.widget", "./jquery.mobile.buttonMarkup"  ], function( $ ) {
+//>>excludeEnd("jqmBuildExclude");
 (function( $, undefined ) {
 
 $.widget( "mobile.button", $.mobile.widget, {
@@ -13,14 +16,22 @@ $.widget( "mobile.button", $.mobile.widget, {
 		corners: true,
 		shadow: true,
 		iconshadow: true,
-		initSelector: "button, [type='button'], [type='submit'], [type='reset'], [type='image']"
+		initSelector: "button, [type='button'], [type='submit'], [type='reset'], [type='image']",
+		mini: false
 	},
 	_create: function() {
 		var $el = this.element,
+			$button,
 			o = this.options,
 			type,
 			name,
 			$buttonPlaceholder;
+
+		// if this is a link, check if it's been enhanced and, if not, use the right function
+		if( $el[ 0 ].tagName === "A" ) {
+	 	 	!$el.hasClass( "ui-btn" ) && $el.buttonMarkup();
+	 	 	return;
+ 	 	}
 
 		// Add ARIA role
 		this.button = $( "<div></div>" )
@@ -33,10 +44,12 @@ $.widget( "mobile.button", $.mobile.widget, {
 				inline: o.inline,
 				corners: o.corners,
 				shadow: o.shadow,
-				iconshadow: o.iconshadow
+				iconshadow: o.iconshadow,
+				mini: o.mini
 			})
 			.append( $el.addClass( "ui-btn-hidden" ) );
 
+        $button = this.button;
 		type = $el.attr( "type" );
 		name = $el.attr( "name" );
 
@@ -63,6 +76,16 @@ $.widget( "mobile.button", $.mobile.widget, {
 				});
 		}
 
+        $el.bind({
+            focus: function() {
+                $button.addClass( $.mobile.focusClass );
+            },
+
+            blur: function() {
+                $button.removeClass( $.mobile.focusClass );
+            }
+        });
+
 		this.refresh();
 	},
 
@@ -87,15 +110,17 @@ $.widget( "mobile.button", $.mobile.widget, {
 			this.enable();
 		}
 
-		// the textWrapper is stored as a data element on the button object
-		// to prevent referencing by it's implementation details (eg 'class')
-		this.button.data( 'textWrapper' ).text( $el.text() || $el.val() );
+                // Grab the button's text element from its implementation-independent data item
+		$(this.button.data( 'buttonElements' ).text).text( $el.text() || $el.val() );
 	}
 });
 
 //auto self-init widgets
 $( document ).bind( "pagecreate create", function( e ){
-	$.mobile.button.prototype.enhanceWithin( e.target );
+	$.mobile.button.prototype.enhanceWithin( e.target, true );
 });
 
 })( jQuery );
+//>>excludeStart("jqmBuildExclude", pragmas.jqmBuildExclude);
+});
+//>>excludeEnd("jqmBuildExclude");

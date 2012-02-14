@@ -1,7 +1,9 @@
-/*
-* "listview" plugin
-*/
+//>>excludeStart("jqmBuildExclude", pragmas.jqmBuildExclude);
+//>>description: Adds a filtering textfield to listviews
+//>>label: Listview Filter
 
+define( [ "jquery", "./jquery.mobile.widget", "./jquery.mobile.buttonMarkup", "./jquery.mobile.page", "./jquery.mobile.page.sections" ], function( $ ) {
+//>>excludeEnd("jqmBuildExclude");
 (function( $, undefined ) {
 
 //Keeps track of the number of lists per page UID
@@ -191,7 +193,7 @@ $.widget( "mobile.listview", $.mobile.widget, {
 						item.addClass( "ui-li-has-arrow" );
 					}
 
-					a.first().addClass( "ui-link-inherit" );
+					a.first().removeClass( "ui-link" ).addClass( "ui-link-inherit" );
 
 					if ( a.length > 1 ) {
 						itemClass += " ui-li-has-alt";
@@ -396,7 +398,10 @@ $.widget( "mobile.listview", $.mobile.widget, {
 
 //auto self-init widgets
 $( document ).bind( "pagecreate create", function( e ){
-	$( $.mobile.listview.prototype.options.initSelector, e.target ).listview();
+	$.mobile.listview.prototype.enhanceWithin( e.target );
 });
 
 })( jQuery );
+//>>excludeStart("jqmBuildExclude", pragmas.jqmBuildExclude);
+});
+//>>excludeEnd("jqmBuildExclude");
