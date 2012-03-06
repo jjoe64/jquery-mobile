@@ -50,17 +50,30 @@ $.widget( "mobile.slider", $.mobile.widget, {
 			step = window.parseFloat( control.attr( "step" ) || 1 ),
 
 			inlineClass = ( this.options.inline || control.jqmData("inline") == true ) ? " ui-slider-inline" : "",
-			
+
 			miniClass = ( this.options.mini || control.jqmData("mini") ) ? " ui-slider-mini" : "",
 
-			slider = $( "<div class='ui-slider " + selectClass + " ui-btn-down-" + trackTheme +
-									" ui-btn-corner-all" + inlineClass + miniClass + "' role='application'></div>" ),
-									
-			valuebg = control.jqmData("highlight") && cType != "select" ? $( "<div class='ui-slider-bg ui-btn-active ui-btn-corner-all'></div>" ).prependTo( slider ) : false,
 
-			handle = $( "<a href='#' class='ui-slider-handle'></a>" )
-				.appendTo( slider )
-				.buttonMarkup({ corners: true, theme: theme, shadow: true })
+			domHandle = document.createElement('a'),
+			handle = $( domHandle ),
+			domSlider = document.createElement('div'),
+			slider = $( domSlider ),
+
+			valuebg = control.jqmData("highlight") && cType != "select" ? (function() {
+				var bg = document.createElement('div');
+				bg.className = 'ui-slider-bg ui-btn-active ui-btn-corner-all';
+				return $( bg ).prependTo( slider );
+			})() : false,
+
+			options;
+
+        domHandle.setAttribute( 'href', "#" );
+		domSlider.setAttribute('role','application');
+		domSlider.className = ['ui-slider ',selectClass," ui-btn-down-",trackTheme,' ui-btn-corner-all', inlineClass, miniClass].join("");
+		domHandle.className = 'ui-slider-handle';
+		domSlider.appendChild(domHandle);
+
+		handle.buttonMarkup({ corners: true, theme: theme, shadow: true })
 				.attr({
 					"role": "slider",
 					"aria-valuemin": min,
@@ -69,8 +82,7 @@ $.widget( "mobile.slider", $.mobile.widget, {
 					"aria-valuetext": val(),
 					"title": val(),
 					"aria-labelledby": labelID
-				}),
-			options;
+				});
 
 		$.extend( this, {
 			slider: slider,
@@ -83,23 +95,34 @@ $.widget( "mobile.slider", $.mobile.widget, {
 		});
 
 		if ( cType == "select" ) {
+			var wrapper = document.createElement('div');
+			wrapper.className = 'ui-slider-inneroffset';
 
-			slider.wrapInner( "<div class='ui-slider-inneroffset'></div>" );
+			for(var j = 0,length = domSlider.childNodes.length;j < length;j++){
+				wrapper.appendChild(domSlider.childNodes[j]);
+			}
+
+			domSlider.appendChild(wrapper);
+
+			// slider.wrapInner( "<div class='ui-slider-inneroffset'></div>" );
 
 			// make the handle move with a smooth transition
 			handle.addClass( "ui-slider-handle-snapping" );
 
 			options = control.find( "option" );
 
-			control.find( "option" ).each(function( i ) {
-
+			for(var i = 0, optionsCount = options.length; i < optionsCount; i++){
 				var side = !i ? "b":"a",
-					theme = !i ? " ui-btn-down-" + trackTheme :( " " + $.mobile.activeBtnClass );
+					sliderTheme = !i ? " ui-btn-down-" + trackTheme :( " " + $.mobile.activeBtnClass ),
+					sliderLabel = document.createElement('div'),
+					sliderImg = document.createElement('span');
 
-				$( "<span class='ui-slider-label ui-slider-label-" + side + theme + " ui-btn-corner-all' role='img'>" + $( this ).getEncodedText() + "</span>" )
-					.prependTo( slider );
-			});
-			
+				sliderImg.className = ['ui-slider-label ui-slider-label-',side,sliderTheme," ui-btn-corner-all"].join("");
+				sliderImg.setAttribute('role','img');
+				sliderImg.appendChild(document.createTextNode(options[i].innerHTML));
+				$(sliderImg).prependTo( slider );
+			}
+
 			self._labels = $( ".ui-slider-label", slider );
 
 		}
@@ -151,7 +174,8 @@ $.widget( "mobile.slider", $.mobile.widget, {
 
 			self.refresh( event );
 			return false;
-		});
+		})
+		.bind( "vclick", false );
 
 		slider.add( document )
 			.bind( "vmouseup", function() {
