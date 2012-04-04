@@ -3,6 +3,7 @@
 //>>label: Core
 //>>group: core
 //>>required: true
+//>>css: ../css/themes/default/jquery.mobile.core.css
 
 define( [ "jquery", "../external/requirejs/text!../version.txt", "./jquery.mobile.widget" ], function( $, __version__ ) {
 //>>excludeEnd("jqmBuildExclude");
@@ -49,7 +50,7 @@ define( [ "jquery", "../external/requirejs/text!../version.txt", "./jquery.mobil
 		maxTransitionWidth: false,
 
 		// Minimum scroll distance that will be remembered when returning to a page
-		minScrollBack: 10,
+		minScrollBack: 250,
 
 		// DEPRECATED: the following property is no longer in use, but defined until 2.0 to prevent conflicts
 		touchOverflowEnabled: false,
@@ -242,7 +243,10 @@ define( [ "jquery", "../external/requirejs/text!../version.txt", "./jquery.mobil
 	$.fn.jqmData = function( prop, value ) {
 		var result;
 		if ( typeof prop != "undefined" ) {
-			result = this.data( prop ? $.mobile.nsNormalize( prop ) : prop, value );
+			if ( prop ) {
+				prop = $.mobile.nsNormalize( prop );
+			}
+			result = this.data.apply( this, arguments.length < 2 ? [ prop ] : [ prop, value ] );
 		}
 		return result;
 	};
