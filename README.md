@@ -4,7 +4,6 @@ This is a modified jQuery Mobile (for Horaz)
 Main Modifies
 ==============
 * ListView - item creation hook: trigger itemApply event
-* stable fixed header/footer, no fade in/out effects
 * Selectmenu - change-event gets always triggered when a option was selected, not only if the value has been changed
 
 
@@ -12,7 +11,7 @@ Last jQuery Mobile update / pull
 =================================
 In regular interval this Fork will be updated from the original jQuery Mobile repository.
 
-Last update: Mar 6, 2012
+Last update: Apr 4, 2012
 
 
 
